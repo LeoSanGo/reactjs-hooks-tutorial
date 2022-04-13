@@ -6,7 +6,7 @@ import { shallow, mount } from 'enzyme';
 
 const userBalance = {
   balance: '1100',
-  savingsBallance: '103',
+  savingBalance: '103',
 };
 
 describe('rendering components', () => {
@@ -41,13 +41,13 @@ describe('passing props', () => {
     <notification balance={userBalance.balance} />
   );
 
-  it('accepsts user account props', () => {
+  it('accepts user account props', () => {
     expect(accountWrapper.props().accounts).toEqual(userBalance);
   });
 
   it('contains savingsBalance value', () => {
     const value = accountWrapper.find('.savings').text();
-    const expectedValue = userBalance.savingsBallance + '$';
+    const expectedValue = userBalance.savingBalance + '$';
     expect(value).toEqual(expectedValue);
   });
 
@@ -55,3 +55,22 @@ describe('passing props', () => {
     expect(notificationWrapper.props().balance).toEqual(userBalance.balance);
   }))
 });
+
+describe("logic", () => {
+  const wrapper = mount(<AccountBalance accounts={userBalance} />);
+  const notificationWrapper = mount(<Notification balance={userBalance.balance} />);
+  wrapper.find('#balance-button').simulate('click');
+
+  it('button click - update savings', () => {
+    const savingsValue = wrapper.find('.savings').text();
+    const expectedValue = userBalance.balance + 100 + '$';
+    expect(savingsValue).toEqual(expectedValue);
+  });
+
+  it('button click - update balance', () => {
+    const balanceValue = wrapper.find('.balance').text();
+    const expectedValue = userBalance.balance - 100 + '$';
+    expect(balanceValue).toEqual(expectedValue);
+  })
+})
+
